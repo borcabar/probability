@@ -1,0 +1,208 @@
+
+#====================================================================
+#                Random Numbers Studio
+#====================================================================
+
+# done the August 30/2018
+
+# data provided by *** to analys-it
+
+
+
+setwd("~/Documents/graph_x-y")
+
+dat=read.table("Data.csv", header = FALSE, sep=',')
+
+
+#====================================================================
+# Libraries
+
+library(Hmisc)
+library(ggplot2)
+library(GGally)
+library(xtable)
+library(data.table)
+library(pastecs)
+library(forecast)
+library(ggplot2)
+install.packages("plyr")
+library("plyr")
+
+#====================================================================
+# Preliminary approximation
+
+
+# give names to the columns
+dat1<-dat
+colnames(dat1)=c('Date', 'A', 'B', 'C', 'D', 'E', 'F')
+dat1$Date <- as.Date(dat1$Date, "%d/%m/%Y")
+
+dat2<-dat1[,2:7]
+
+head(dat1)
+
+summary(dat1)
+stat.desc(dat1) 
+str(dat1)
+describe(dat1)
+
+
+stat.desc(dat1$A)[c('mean','median','std.dev','min','max')]
+
+# analysing the main statistical values
+
+min_<-apply(dat2,2,min)
+max_<-apply(dat2,2,max)
+mean_<-apply(dat2,2,mean)
+median_<-apply(dat2,2,median)
+sd_<-apply(dat2,2,sd)
+
+res_dat<-rbind(min_, max_, mean_, median_, sd_)
+
+ggpairs(dat2)
+
+colnames(dat2)
+
+length(dat2$A[dat2$A==5])
+
+length(dat2$A[dat2$F==44])
+
+
+#====================================================================
+#make another dataset with the whole numbers in only one column
+
+dat3<-apply(dat1,2,as.character)
+dat3a<-dat3[,1]
+dat3<-dat3[,2:7]
+dat3<-gsub(" ","0", dat3)
+dat3<-apply(dat3,1,paste, collapse="")
+dat3<-data.frame(dat3a,dat3) 
+colnames(dat3)<-c("Date", "value")
+dat3$Date <- as.Date(dat3$Date, "%Y-%m-%d")
+dat3$value <- as.numeric(levels(dat3$value))[dat3$value]
+m<-max(dat3$value)
+dat3$value<-dat3$value/m
+
+
+
+51321293744/m
+
+# i already transform from a series of 6 values to a normalized unique value, let's get some information from that
+# out normalized favorite number would be 51321293744/323335373941=0.1587246
+
+dim(dat3)
+length(unique(dat3$value))
+
+# all the values are ONE time, no repetitions.
+
+ggplot(dat3,aes(x=value))+geom_histogram(bins=20)
+ggplot(dat3, aes(x=Date, y=value))+geom_point()
+
+# make a function to emulate result
+
+nume<-100000
+re<-sample(1:49, 6, replace=FALSE)
+res<-re[order(re)]
+for (i in 1:nume) {re<-sample(1:49, 6, replace=FALSE)
+re<-re[order(re)]
+res<-rbind(res,re)}
+res<-data.frame(res)
+rownames(res)<-NULL
+colnames(res)<-c('A', 'B', 'C', 'D', 'E', 'F')
+
+head(res)
+
+dat2<-res
+ 
+# get the main descriptive statistical values
+
+min_<-apply(dat2,2,min)
+max_<-apply(dat2,2,max)
+mean_<-apply(dat2,2,mean)
+median_<-apply(dat2,2,median)
+sd_<-apply(dat2,2,sd)
+
+res_dat<-rbind(min_, max_, mean_, median_, sd_)
+
+
+# figure out how many times a values repeats itself
+
+dat3<-apply(dat2,2,as.character)
+dat3<-gsub(" ","0", dat3)
+dat3<-apply(dat3,1,paste, collapse="")
+dat3<-data.frame(dat3) 
+dat3$dat3 <- as.numeric(levels(dat3$dat3))[dat3$dat3]
+#m<-max(dat3)
+#dat3$dat3<-dat3$dat3/m
+
+dat4<-count(dat3, vars = "dat3")
+
+dat4a<-data.frame(dat4$dat3[dat4$freq>1])
+colnames(dat4a)<-'dat3'
+
+dat5<-merge(dat4a,dat4, by="dat3")
+dat3a<-cbind(dat2,dat3)
+dat5<-merge(dat5,dat3a, by="dat3")
+
+
+colnames(dat4a)<-'dat3'
+
+
+
+ #i have the numbers and value in dat2 and the value and probability in dat2, now i make an inner join
+
+# those are the values that more repeats itseves
+dat5<-merge(dat3a,dat4a, by="dat3")
+
+# Find the distribution of the former values, obviously multiplied by 2
+min_<-apply(dat5,2,min)
+max_<-apply(dat5,2,max)
+mean_<-apply(dat5,2,mean)
+median_<-apply(dat5,2,median)
+sd_<-apply(dat5,2,sd)
+
+res_dat<-rbind(min_, max_, mean_, median_, sd_)
+
+
+length(unique(dat4))
+
+head(dat2)
+
+dim(dat4)
+
+# According to the number of possibilities of each number, i calculate the probability of each value
+# the range of values for every variable are (A, B, C, D, E, F) = (33, 37, 40, 43, 38, 33)
+
+# Here a draw the empirical distribution of every number of the lotto, to have an estimation of most 
+# likely values
+
+a<-density(dat2$A)
+aa<-plot(a)
+a<-density(dat2$B)
+bb<-plot(a)
+a<-density(dat2$C)
+cc<-plot(a)
+a<-density(dat2$D)
+dd<-plot(a)
+a<-density(dat2$E)
+ee<-plot(a)
+a<-density(dat2$F)
+ff<-plot(a)
+
+# For the values with approx. the bigger probability, the total probability is
+
+16*25*10^-10
+
+0.1*0.05*0.04*0.04*0.05*0.1
+
+# For the most likely numbers, for every position of the lotto, the most probable is 4e-8. SHIT!!!
+
+# THINGS TO DO ++++++++++++++++++++++++++++++++++++++++
+
+# mix all the values in only one column to study the variability of values
+#joint with the former study the time variability
+# find the most likely value, so far [5 13 21 29 37 44], our number would be 51321293744
+# make a machine to reproduce the values, so make a much bigger set of values
+
+
+
